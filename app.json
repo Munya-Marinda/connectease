@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "solo-contacts",
-    "slug": "solo-contacts",
+    "name": "ConnectEase",
+    "slug": "connectease",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.munya_m.connectease"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cd3d9f34-fb2d-44c2-ab33-f3c4ad7f0922"
+      }
     }
   }
 }
