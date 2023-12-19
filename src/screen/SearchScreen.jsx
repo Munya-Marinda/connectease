@@ -1,21 +1,24 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, TextInput, Dimensions, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  Dimensions,
+  Pressable,
+  BackHandler,
+} from "react-native";
 import ContactListView from "../components/ContactListView";
 import { useColorScheme } from "react-native";
 import { searchItems } from "../functions/handleContactData";
 import { Text, View } from "../components/Themed";
-import { ThemedStatusBar } from "../components/ThemedStatusBar";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 //
-const SearchScreen = () => {
+const SearchScreen = ({ handleScreen }) => {
   //
-  const navigation = useNavigation();
   const theme = useColorScheme();
   const [searchingTerm, setSearchingTerm] = useState("");
   //
@@ -35,11 +38,23 @@ const SearchScreen = () => {
     };
     fetchSearchResults();
   };
+  //
+  useEffect(() => {
+    const backAction = () => {
+      handleScreen("Home");
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   //
   return (
     <View style={styles.container} lightColor="white" darkColor="rgba(0,0,0,1)">
-      <ThemedStatusBar />
       <View
         style={{
           display: "flex",
@@ -67,7 +82,7 @@ const SearchScreen = () => {
               paddingLeft: 20,
             }}
             onPress={() => {
-              navigation.navigate("Home");
+              handleScreen("Home");
             }}
           >
             <Text>CLOSE</Text>

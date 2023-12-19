@@ -13,16 +13,14 @@ import {
 import { Text, View } from "../components/Themed";
 import { useDispatch } from "react-redux";
 import { contactsReducer } from "../store/features/contacts/contactsSlice";
-import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 const GLOBAL_GRAY = "silver";
 
 //
-const ContactListView = ({ searching, contactsAlphabetical }) => {
+const ContactListView = ({ searching, contactsAlphabetical, handleScreen }) => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
   //
   const ErrorMessage = () => {
     return (
@@ -30,7 +28,7 @@ const ContactListView = ({ searching, contactsAlphabetical }) => {
         {searching ? (
           <Text>NO RESULTS</Text>
         ) : (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => handleScreen("Contact")}>
             <Text
               style={{
                 textDecorationLine: "underline",
@@ -185,7 +183,7 @@ const ContactListView = ({ searching, contactsAlphabetical }) => {
                             contact_id: parseInt(contact.id),
                           })
                         );
-                        navigation.navigate("Contact");
+                        handleScreen("Contact");
                       }}
                       key={index}
                       style={{

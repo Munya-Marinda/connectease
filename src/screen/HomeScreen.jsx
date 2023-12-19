@@ -10,50 +10,31 @@ import ContactListView from "../components/ContactListView";
 import { useColorScheme } from "react-native";
 import { View } from "../components/Themed";
 import { ThemedFontAwesome5 } from "../components/ThemedFontAwesome5";
-import { ThemedStatusBar } from "../components/ThemedStatusBar";
-import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { contactsReducer } from "../store/features/contacts/contactsSlice";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 //
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 //
-const HomeScreen = ({ _contactsAlphabetical }) => {
+const HomeScreen = ({ _contactsAlphabetical, handleScreen }) => {
   //
   const dispatch = useDispatch();
   const theme = useColorScheme();
-  const navigation = useNavigation();
   //
   return (
     <View style={styles.container} lightColor="white" darkColor="rgba(0,0,0,1)">
-      <ThemedStatusBar />
-      {/* <View>
-        <Pressable
-          onPress={() => {
-            dispatch(
-              contactsReducer({
-                type: "contact",
-                contacts: [{ contact: "Hi, I'm a contact." }],
-              })
-            );
-          }}
-        >
-          <Text>contactsReducer</Text>
-        </Pressable>
-        <Text>{JSON.stringify(contacts)}</Text>
-      </View> */}
       <View
         style={{
           display: "flex",
-          width: windowWidth * 1,
+          marginBottom: 10,
+          borderBottomWidth: 1,
           flexDirection: "row",
+          width: windowWidth * 1,
           alignContent: "center",
           justifyContent: "space-between",
-          // paddingBottom: 30,
-          marginBottom: 10,
           borderBottomColor: theme === "dark" ? "white" : "transparent",
-          borderBottomWidth: 1,
         }}
       >
         <Pressable
@@ -62,7 +43,7 @@ const HomeScreen = ({ _contactsAlphabetical }) => {
             paddingHorizontal: 20,
           }}
           onPress={() => {
-            navigation.navigate("Search");
+            handleScreen("Search");
           }}
         >
           {({ pressed }) => (
@@ -93,7 +74,7 @@ const HomeScreen = ({ _contactsAlphabetical }) => {
                   contact_id: "add",
                 })
               );
-              navigation.navigate("Contact");
+              handleScreen("Contact");
             }}
           >
             {({ pressed }) => (
@@ -110,13 +91,14 @@ const HomeScreen = ({ _contactsAlphabetical }) => {
               paddingHorizontal: 20,
             }}
             onPress={() => {
-              navigation.navigate("Menu");
+              handleScreen("Menu");
             }}
           >
             {({ pressed }) => (
-              <ThemedFontAwesome5
-                name="bars"
-                size={20}
+              <Ionicons
+                name="settings-sharp"
+                size={22}
+                color={"black"}
                 style={{ opacity: pressed ? 0.5 : 1 }}
               />
             )}
@@ -135,7 +117,10 @@ const HomeScreen = ({ _contactsAlphabetical }) => {
               </TouchableOpacity> */}
         </View>
       </View>
-      <ContactListView contactsAlphabetical={_contactsAlphabetical} />
+      <ContactListView
+        contactsAlphabetical={_contactsAlphabetical}
+        handleScreen={handleScreen}
+      />
     </View>
   );
 };
@@ -144,7 +129,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    paddingTop: 10,
     flex: 1,
     display: "flex",
     width: windowWidth,

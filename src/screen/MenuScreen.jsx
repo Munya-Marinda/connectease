@@ -5,17 +5,63 @@ import {
   StyleSheet,
   Dimensions,
   Button,
+  BackHandler,
+  Pressable,
 } from "react-native";
 import { clearContacts } from "../functions/handleContactData";
+import { useEffect } from "react";
+import { ThemedFontAwesome5 } from "../components/ThemedFontAwesome5";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 //
-const MenuScreen = () => {
+const MenuScreen = ({ handleScreen }) => {
+  //  //
+  useEffect(() => {
+    const backAction = () => {
+      handleScreen("Home");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   //
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          display: "flex",
+          marginBottom: 20,
+          flexDirection: "row",
+          width: windowWidth * 1,
+          alignContent: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Pressable
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+          }}
+          onPress={() => {
+            handleScreen("Home");
+          }}
+        >
+          {({ pressed }) => (
+            <ThemedFontAwesome5
+              name="arrow-left"
+              size={20}
+              style={{ opacity: pressed ? 0.5 : 1 }}
+            />
+          )}
+        </Pressable>
+      </View>
       <ScrollView>
         <View style={styles.setting_parent}>
           <Text>Clear all contacts data.</Text>
@@ -35,7 +81,7 @@ export default MenuScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    paddingTop: 10,
     width: windowWidth,
     alignItems: "center",
     justifyContent: "center",

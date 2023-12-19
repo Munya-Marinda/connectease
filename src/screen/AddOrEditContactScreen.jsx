@@ -1,4 +1,3 @@
-// import { Link, router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import {
   TouchableOpacity,
@@ -7,6 +6,7 @@ import {
   Alert,
   Dimensions,
   Pressable,
+  BackHandler,
 } from "react-native";
 import { Text, View, TextInput } from "../components/Themed";
 import {
@@ -22,9 +22,7 @@ import {
   updateContactData,
   validateContactData,
 } from "../functions/handleContactData";
-import { ThemedStatusBar } from "../components/ThemedStatusBar";
 import { ThemedFontAwesome5 } from "../components/ThemedFontAwesome5";
-import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { contactsReducer } from "../store/features/contacts/contactsSlice";
 import { Dropdown } from "react-native-element-dropdown";
@@ -34,9 +32,8 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 //
-const AddOrEditContactScreen = ({ contact_id }) => {
+const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
   const data = getCountryPhoneCodes();
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isFocus, setIsFocus] = useState(false);
   const [showWhatsAppCountryCodes, setShowWhatsAppCountryCodes] =
@@ -87,6 +84,20 @@ const AddOrEditContactScreen = ({ contact_id }) => {
     //
   }, []);
   //
+  useEffect(() => {
+    const backAction = () => {
+      handleScreen("Home");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+  //
   const TextValue = ({
     text_value,
     lable_text,
@@ -129,7 +140,7 @@ const AddOrEditContactScreen = ({ contact_id }) => {
         contacts: sortAndGroupByName(contacts),
       })
     );
-    navigation.navigate("Home");
+    handleScreen("Home");
   };
   //
   const __validateContactInformation = () => {
@@ -163,22 +174,38 @@ const AddOrEditContactScreen = ({ contact_id }) => {
   //
   return (
     <View style={styles.container}>
-      <ThemedStatusBar />
-
       <View
         style={{
           display: "flex",
-          width: windowWidth * 1,
+          marginBottom: 20,
           flexDirection: "row",
+          width: windowWidth * 1,
           alignContent: "center",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
         }}
       >
+        <Pressable
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+          }}
+          onPress={() => {
+            handleScreen("Home");
+          }}
+        >
+          {({ pressed }) => (
+            <ThemedFontAwesome5
+              name="arrow-left"
+              size={20}
+              style={{ opacity: pressed ? 0.5 : 1 }}
+            />
+          )}
+        </Pressable>
+
         {isEditing ? (
           <TouchableOpacity
             style={{
-              // paddingTop: 10,
-              paddingBottom: 20,
+              paddingVertical: 10,
               paddingHorizontal: 20,
             }}
             onPress={() => {
@@ -190,8 +217,7 @@ const AddOrEditContactScreen = ({ contact_id }) => {
         ) : (
           <TouchableOpacity
             style={{
-              paddingTop: 10,
-              paddingBottom: 20,
+              paddingVertical: 10,
               paddingHorizontal: 20,
             }}
             onPress={() => {
@@ -722,7 +748,7 @@ export default AddOrEditContactScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // paddingTop: 20,
+    paddingTop: 10,
     width: windowWidth,
     alignItems: "center",
     justifyContent: "center",
