@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, Linking } from "react-native";
+import { Alert, Linking, ToastAndroid } from "react-native";
 import * as Clipboard from "expo-clipboard";
 
 export const countryPhoneCodes = [
@@ -413,6 +413,7 @@ export const clearContacts = async () => {
 //
 export const copyToClipboard = async (text) => {
   await Clipboard.setStringAsync(text);
+  ToastAndroid.show("Copied: " + text, ToastAndroid.LONG, 1000);
 };
 //
 export const openWebLink = (link) => {

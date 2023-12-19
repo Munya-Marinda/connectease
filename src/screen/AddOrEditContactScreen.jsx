@@ -7,10 +7,12 @@ import {
   Dimensions,
   Pressable,
   BackHandler,
+  useColorScheme,
 } from "react-native";
 import { Text, View, TextInput } from "../components/Themed";
 import {
   addContact,
+  copyToClipboard,
   countryPhoneCodes,
   deleteContactData,
   generateContacts,
@@ -27,12 +29,16 @@ import { useDispatch } from "react-redux";
 import { contactsReducer } from "../store/features/contacts/contactsSlice";
 import { Dropdown } from "react-native-element-dropdown";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { ContactActions } from "../components/ContactActions";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 //
 const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
+  const theme = useColorScheme();
+  // const theme = "dark";
+  const textThemeColor = theme === "dark" ? "white" : "black";
   const data = getCountryPhoneCodes();
   const dispatch = useDispatch();
   const [isFocus, setIsFocus] = useState(false);
@@ -111,23 +117,53 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
             marginBottom: 10,
             color: "gray",
             fontWeight: "bold",
-            fontSize: 16,
+            fontSize: 14,
           }}
         >
           {lable_text}
         </Text>
-        <Text
+        <View
           style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: "transparent",
             borderWidth: 1,
-            borderColor: "rgba(0,0,0,0.1)",
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-            width: windowWidth * 0.9,
+            borderColor:
+              theme === "light" ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.3)",
+            borderRadius: 10,
           }}
         >
-          {isPhoneNumber && country_code + " "}
-          {text_value}
-        </Text>
+          <Text
+            style={{
+              fontSize: 15,
+              paddingVertical: 10,
+              paddingHorizontal: 10,
+              width: windowWidth * 0.8,
+            }}
+          >
+            {isPhoneNumber && country_code + " "}
+            {text_value}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              if (isPhoneNumber) {
+                copyToClipboard(country_code + text_value);
+              } else {
+                copyToClipboard(text_value);
+              }
+            }}
+            style={{
+              padding: 5,
+              borderRadius: 40,
+              backgroundColor: "rgba(255,255,255,0.3)",
+              marginHorizontal: 3,
+            }}
+          >
+            <Ionicons name="md-copy-sharp" size={15} color="gray" />
+          </TouchableOpacity>
+        </View>
       </>
     );
   };
@@ -177,7 +213,7 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
       <View
         style={{
           display: "flex",
-          marginBottom: 20,
+          marginBottom: 10,
           flexDirection: "row",
           width: windowWidth * 1,
           alignContent: "center",
@@ -229,46 +265,64 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
         )}
       </View>
 
+      {!isEditing && (
+        <>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 20,
+              marginBottom: 20,
+              textAlign: "center",
+            }}
+          >
+            {contactInformation.name}
+          </Text>
+          <ContactActions contact={contactInformation} />
+        </>
+      )}
+
       <ScrollView
         style={{
-          // paddingRight: 15,
+          paddingBottom: 10,
           width: windowWidth * 0.9,
           height: windowHeight * 0.82,
         }}
       >
-        <View style={styles.input_parent}>
-          {isEditing ? (
-            <>
-              <Text style={styles.label}>Name</Text>
-              <TextInput
-                editable={!isEditing ? false : true}
-                value={contactInformation.name}
-                onChangeText={(value) => {
-                  setContactInformation({
-                    ...contactInformation,
-                    name: value,
-                  });
-                }}
-                style={[
-                  styles.text_input,
-                  ,
-                  {
-                    borderColor: messageObj?.name?.result ? "silver" : "red",
-                  },
-                ]}
-                placeholder="Enter Name"
-              />
+        {isEditing ? (
+          <View style={styles.input_parent}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              editable={!isEditing ? false : true}
+              value={contactInformation.name}
+              onChangeText={(value) => {
+                setContactInformation({
+                  ...contactInformation,
+                  name: value,
+                });
+              }}
+              style={[
+                styles.text_input,
+                ,
+                {
+                  borderColor: messageObj?.name?.result ? "silver" : "red",
+                },
+              ]}
+              placeholder="Enter Name"
+            />
+            {!messageObj?.name?.result && (
               <Text style={styles.error_label}>
                 {messageObj?.name?.message[0]}
               </Text>
-            </>
-          ) : (
-            <TextValue
+            )}
+          </View>
+        ) : (
+          <>
+            {/* <TextValue
               text_value={contactInformation.name}
               lable_text={"Name"}
-            />
-          )}
-        </View>
+              /> */}
+          </>
+        )}
 
         <View style={styles.input_parent}>
           {isEditing ? (
@@ -311,7 +365,10 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                         isFocus && { borderColor: "blue" },
                       ]}
                       placeholderStyle={{}}
-                      selectedTextStyle={{ paddingHorizontal: 10 }}
+                      selectedTextStyle={{
+                        paddingHorizontal: 10,
+                        color: textThemeColor,
+                      }}
                       inputSearchStyle={{}}
                       iconStyle={{}}
                       itemContainerStyle={{
@@ -351,7 +408,8 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                         flexDirection: "row",
                         alignItems: "center",
                         width: windowWidth * 0.2,
-                        backgroundColor: "#ededed",
+                        backgroundColor:
+                          theme === "light" ? "#ededed" : "#646464",
                         justifyContent: "space-between",
                         borderWidth: 1,
                         borderColor: "silver",
@@ -363,13 +421,16 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                       {({ pressed }) => (
                         <>
                           <Ionicons
+                            color={"silver"}
                             name="caret-down"
                             size={15}
-                            color={"gray"}
                             style={{ paddingLeft: 5 }}
                           />
                           <Text
-                            style={{ textAlign: "center", paddingRight: 10 }}
+                            style={{
+                              textAlign: "center",
+                              paddingRight: 10,
+                            }}
                           >
                             {contactInformation.number_country_code.code}
                           </Text>
@@ -392,7 +453,7 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                       style={[
                         styles.text_input,
                         {
-                          width: windowWidth * 0.75,
+                          width: windowWidth * 0.7,
                           marginTop: 0,
                         },
                       ]}
@@ -488,7 +549,10 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                         isFocus && { borderColor: "blue" },
                       ]}
                       placeholderStyle={{}}
-                      selectedTextStyle={{ paddingHorizontal: 10 }}
+                      selectedTextStyle={{
+                        paddingHorizontal: 10,
+                        color: textThemeColor,
+                      }}
                       inputSearchStyle={{}}
                       iconStyle={{}}
                       itemContainerStyle={{
@@ -528,7 +592,8 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                         flexDirection: "row",
                         alignItems: "center",
                         width: windowWidth * 0.2,
-                        backgroundColor: "#ededed",
+                        backgroundColor:
+                          theme === "light" ? "#ededed" : "#646464",
                         justifyContent: "space-between",
                         borderWidth: 1,
                         borderColor: "silver",
@@ -540,9 +605,9 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                       {({ pressed }) => (
                         <>
                           <Ionicons
+                            color={"silver"}
                             name="caret-down"
                             size={15}
-                            color={"gray"}
                             style={{ paddingLeft: 5 }}
                           />
                           <Text
@@ -566,7 +631,7 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
                       style={[
                         styles.text_input,
                         {
-                          width: windowWidth * 0.75,
+                          width: windowWidth * 0.7,
                           marginTop: 0,
                         },
                       ]}
@@ -662,7 +727,7 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
       </ScrollView>
 
       <View style={styles.button_group_1}>
-        {type.type === "edit" && (
+        {type.type === "edit" && !isEditing && (
           <TouchableOpacity
             onPress={() => {
               Alert.alert("Delete Contact", "Delete contact?", [
@@ -694,50 +759,82 @@ const AddOrEditContactScreen = ({ contact_id, handleScreen }) => {
         )}
 
         {isEditing && (
-          <TouchableOpacity
-            onPress={() => {
-              if (type.type === "add") {
-                if (__validateContactInformation() === true) {
-                  const _addContact = async () => {
-                    const result = await addContact(contactInformation);
-                    fetchAndUpdateReduxContacts();
-                  };
-                  _addContact();
-                }
-              } else if (type.type === "edit") {
-                if (__validateContactInformation() === true) {
-                  Alert.alert(
-                    "Save Changes",
-                    "Update contact with new changes?",
-                    [
-                      {
-                        text: "Cancel",
-                        onPress: () => {
-                          return false;
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                Alert.alert("Cancel", "Do you want to cancel?", [
+                  {
+                    text: "Cancel",
+                    onPress: () => {
+                      return false;
+                    },
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      const _deleteContactData = async () => {
+                        const result = await deleteContactData(
+                          contactInformation
+                        );
+                        fetchAndUpdateReduxContacts();
+                      };
+                      _deleteContactData();
+                    },
+                  },
+                ]);
+              }}
+              style={styles.button_style_2}
+            >
+              <Text style={{ fontWeight: "bold", color: "silver" }}>
+                CANCEL
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (type.type === "add") {
+                  if (__validateContactInformation() === true) {
+                    const _addContact = async () => {
+                      const result = await addContact(contactInformation);
+                      fetchAndUpdateReduxContacts();
+                    };
+                    _addContact();
+                  }
+                } else if (type.type === "edit") {
+                  if (__validateContactInformation() === true) {
+                    Alert.alert(
+                      "Save Changes",
+                      "Update contact with new changes?",
+                      [
+                        {
+                          text: "Cancel",
+                          onPress: () => {
+                            return false;
+                          },
+                          style: "cancel",
                         },
-                        style: "cancel",
-                      },
-                      {
-                        text: "OK",
-                        onPress: () => {
-                          const _updateContactData = async () => {
-                            const result = await updateContactData(
-                              contactInformation
-                            );
-                            fetchAndUpdateReduxContacts();
-                          };
-                          _updateContactData();
+                        {
+                          text: "OK",
+                          onPress: () => {
+                            const _updateContactData = async () => {
+                              const result = await updateContactData(
+                                contactInformation
+                              );
+                              fetchAndUpdateReduxContacts();
+                            };
+                            _updateContactData();
+                          },
                         },
-                      },
-                    ]
-                  );
+                      ]
+                    );
+                  }
                 }
-              }
-            }}
-            style={styles.button_style_2}
-          >
-            <Text style={{ fontWeight: "bold" }}>SAVE</Text>
-          </TouchableOpacity>
+              }}
+              style={styles.button_style_2}
+            >
+              <Text style={{ fontWeight: "bold" }}>SAVE</Text>
+            </TouchableOpacity>
+          </>
         )}
       </View>
     </View>
@@ -748,7 +845,7 @@ export default AddOrEditContactScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
+    // paddingTop: 35,
     width: windowWidth,
     alignItems: "center",
     justifyContent: "center",

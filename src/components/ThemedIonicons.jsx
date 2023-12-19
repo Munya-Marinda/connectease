@@ -1,16 +1,12 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useColorScheme } from "react-native";
 
-export function ThemedFontAwesome5({
-  name = "question",
-  size = 20,
-  style = {},
-}) {
+export function ThemedIonicons({ name = "question", size = 20, style = {} }) {
   // const theme = "dark";
   const theme = useColorScheme() ?? "light";
   //
   return (
-    <FontAwesome5
+    <Ionicons
       name={name}
       size={size}
       color={theme === "dark" ? "white" : "black"}

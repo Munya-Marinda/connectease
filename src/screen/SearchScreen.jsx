@@ -12,6 +12,7 @@ import { searchItems } from "../functions/handleContactData";
 import { Text, View } from "../components/Themed";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { ThemedFontAwesome5 } from "../components/ThemedFontAwesome5";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -20,6 +21,7 @@ const windowHeight = Dimensions.get("window").height;
 const SearchScreen = ({ handleScreen }) => {
   //
   const theme = useColorScheme();
+  // const theme = "dark";
   const [searchingTerm, setSearchingTerm] = useState("");
   //
   const [contactsAlphabetical, setContactsAlphabetical] = useState([]);
@@ -62,8 +64,7 @@ const SearchScreen = ({ handleScreen }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          paddingBottom: 30,
-          marginBottom: 10,
+          marginBottom: 20,
           borderBottomColor: theme === "dark" ? "white" : "transparent",
           borderBottomWidth: 1,
         }}
@@ -72,41 +73,32 @@ const SearchScreen = ({ handleScreen }) => {
           style={{
             display: "flex",
             flexDirection: "row",
-            // paddingHorizontal: 10,
             alignItems: "center",
-            justifyContent: "flex-start",
+            width: windowWidth * 1,
+            justifyContent: "space-between",
           }}
         >
           <Pressable
             style={{
-              paddingLeft: 20,
+              paddingVertical: 10,
+              paddingHorizontal: 20,
             }}
             onPress={() => {
               handleScreen("Home");
             }}
           >
-            <Text>CLOSE</Text>
-          </Pressable>
-          {/* <Pressable
-            style={{
-              paddingLeft: 20,
-            }}
-            onPress={() => {
-              handleSearch();
-            }}
-          >
             {({ pressed }) => (
-              <FontAwesome5
-                name="search"
-                color="silver"
+              <ThemedFontAwesome5
+                name="arrow-left"
                 size={20}
                 style={{ opacity: pressed ? 0.5 : 1 }}
               />
             )}
-          </Pressable> */}
+          </Pressable>
           <TextInput
             style={{
-              width: windowWidth * 0.7,
+              // width: windowWidth * 0.7,
+              // backgroundColor: "silver",
               color: theme === "dark" ? "white" : "black",
             }}
             textAlign="center"
@@ -121,6 +113,20 @@ const SearchScreen = ({ handleScreen }) => {
               handleSearch(term);
             }}
           />
+          <Pressable
+            style={{
+              paddingHorizontal: 20,
+              opacity: 0,
+            }}
+          >
+            {({ pressed }) => (
+              <ThemedFontAwesome5
+                name="search"
+                size={20}
+                style={{ opacity: pressed ? 0.5 : 1 }}
+              />
+            )}
+          </Pressable>
         </View>
       </View>
       <ContactListView
@@ -135,7 +141,7 @@ export default SearchScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    // paddingTop: 35,
     flex: 1,
     display: "flex",
     width: windowWidth,

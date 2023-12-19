@@ -1,6 +1,4 @@
 import {
-  Text,
-  View,
   ScrollView,
   StyleSheet,
   Dimensions,
@@ -11,6 +9,7 @@ import {
 import { clearContacts } from "../functions/handleContactData";
 import { useEffect } from "react";
 import { ThemedFontAwesome5 } from "../components/ThemedFontAwesome5";
+import { Text, View } from "../components/Themed";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -81,7 +80,7 @@ export default MenuScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
+    // paddingTop: 35,
     width: windowWidth,
     alignItems: "center",
     justifyContent: "center",

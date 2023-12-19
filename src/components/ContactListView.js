@@ -13,6 +13,7 @@ import {
 import { Text, View } from "../components/Themed";
 import { useDispatch } from "react-redux";
 import { contactsReducer } from "../store/features/contacts/contactsSlice";
+import { useEffect } from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -26,7 +27,7 @@ const ContactListView = ({ searching, contactsAlphabetical, handleScreen }) => {
     return (
       <>
         {searching ? (
-          <Text>NO RESULTS</Text>
+          <Text></Text>
         ) : (
           <TouchableOpacity onPress={() => handleScreen("Contact")}>
             <Text
@@ -44,6 +45,8 @@ const ContactListView = ({ searching, contactsAlphabetical, handleScreen }) => {
   //
   //
   const ContactCard = ({ contact }) => {
+    //
+    //
     return (
       <>
         <View
@@ -78,7 +81,9 @@ const ContactListView = ({ searching, contactsAlphabetical, handleScreen }) => {
                 : ""}
             </Text>
           </View>
-          <Text style={{ marginLeft: 10 }}>{contact.name}</Text>
+          <Text style={{ marginLeft: 10 }}>
+            {contact.name.substring(0, 20)}...
+          </Text>
         </View>
         <View
           style={{
@@ -89,49 +94,55 @@ const ContactListView = ({ searching, contactsAlphabetical, handleScreen }) => {
             backgroundColor: "transparent",
           }}
         >
-          <TouchableOpacity
-            onPress={() => {
-              const final_number =
-                contact.whatsapp_country_code.code + contact.whatsapp;
-              openWhatsAppWithMessage(final_number, "Hey " + contact.name);
-            }}
-            style={{
-              padding: 5,
-              borderRadius: 40,
-              backgroundColor: "#075E54",
-              marginHorizontal: 3,
-            }}
-          >
-            <Ionicons name="logo-whatsapp" size={15} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              openPhoneApp(
-                "+" + contact.number_country_code.code + contact.number
-              );
-            }}
-            style={{
-              padding: 5,
-              borderRadius: 40,
-              backgroundColor: "green",
-              marginHorizontal: 3,
-            }}
-          >
-            <Ionicons name="call" size={15} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              openEmailApp(contact.email, "Email subject", "Email body");
-            }}
-            style={{
-              padding: 5,
-              borderRadius: 40,
-              backgroundColor: "blue",
-              marginHorizontal: 3,
-            }}
-          >
-            <Ionicons name="mail" size={15} color="white" />
-          </TouchableOpacity>
+          {contact.whatsapp.trim().length > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                const final_number =
+                  contact.whatsapp_country_code.code + contact.whatsapp;
+                openWhatsAppWithMessage(final_number, "Hey " + contact.name);
+              }}
+              style={{
+                padding: 5,
+                borderRadius: 40,
+                backgroundColor: "#075E54",
+                marginHorizontal: 3,
+              }}
+            >
+              <Ionicons name="logo-whatsapp" size={15} color="white" />
+            </TouchableOpacity>
+          )}
+          {contact.number.trim().length > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                openPhoneApp(
+                  "+" + contact.number_country_code.code + contact.number
+                );
+              }}
+              style={{
+                padding: 5,
+                borderRadius: 40,
+                backgroundColor: "green",
+                marginHorizontal: 3,
+              }}
+            >
+              <Ionicons name="call" size={15} color="white" />
+            </TouchableOpacity>
+          )}
+          {contact.email.trim().length > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                openEmailApp(contact.email, "Email subject", "Email body");
+              }}
+              style={{
+                padding: 5,
+                borderRadius: 40,
+                backgroundColor: "blue",
+                marginHorizontal: 3,
+              }}
+            >
+              <Ionicons name="mail" size={15} color="white" />
+            </TouchableOpacity>
+          )}
         </View>
       </>
     );
@@ -140,7 +151,7 @@ const ContactListView = ({ searching, contactsAlphabetical, handleScreen }) => {
   return (
     <ScrollView
       style={{
-        height: windowHeight * 0.8,
+        height: windowHeight * 0.9,
       }}
     >
       {contactsAlphabetical !== undefined &&

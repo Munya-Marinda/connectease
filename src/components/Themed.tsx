@@ -25,6 +25,7 @@ export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
+  // const theme = "dark";
   const theme = useColorScheme() ?? "light";
   const colorFromProps = props[theme];
 
@@ -56,5 +57,11 @@ export function TextInput(props: TextInputProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
-  return <DefaultTextInput placeholderTextColor={"silver"} style={[{ color }, style]} {...otherProps} />;
+  return (
+    <DefaultTextInput
+      placeholderTextColor={"silver"}
+      style={[{ color }, style]}
+      {...otherProps}
+    />
+  );
 }

@@ -12,7 +12,7 @@ import { View } from "../components/Themed";
 import { ThemedFontAwesome5 } from "../components/ThemedFontAwesome5";
 import { useDispatch, useSelector } from "react-redux";
 import { contactsReducer } from "../store/features/contacts/contactsSlice";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { ThemedIonicons } from "../components/ThemedIonicons";
 
 //
 const windowWidth = Dimensions.get("window").width;
@@ -21,14 +21,17 @@ const windowHeight = Dimensions.get("window").height;
 const HomeScreen = ({ _contactsAlphabetical, handleScreen }) => {
   //
   const dispatch = useDispatch();
+  // const theme = "dark";
   const theme = useColorScheme();
+  //
+  const textThemeColor = theme === "dark" ? "white" : "black";
   //
   return (
     <View style={styles.container} lightColor="white" darkColor="rgba(0,0,0,1)">
       <View
         style={{
           display: "flex",
-          marginBottom: 10,
+          marginBottom: 20,
           borderBottomWidth: 1,
           flexDirection: "row",
           width: windowWidth * 1,
@@ -95,10 +98,9 @@ const HomeScreen = ({ _contactsAlphabetical, handleScreen }) => {
             }}
           >
             {({ pressed }) => (
-              <Ionicons
+              <ThemedIonicons
                 name="settings-sharp"
                 size={22}
-                color={"black"}
                 style={{ opacity: pressed ? 0.5 : 1 }}
               />
             )}
@@ -129,7 +131,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
+    // paddingTop: 35,
     flex: 1,
     display: "flex",
     width: windowWidth,
