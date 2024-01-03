@@ -1,8 +1,8 @@
-# 👥📊📅 SoloSales
+# 👥📊📅 ConnectEase
 
 `Your Personal Client Management Solution`
 
-**_SoloSales_** is a powerful React Native application designed to simplify your client management process. Whether you're a sales professional, entrepreneur, or anyone who needs to keep track of prospective clients, **_SoloSales_** has you covered.
+**_ConnectEase_** is a powerful React Native application designed to simplify your client management process. Whether you're a sales professional, entrepreneur, or anyone who needs to keep track of prospective clients, **_ConnectEase_** has you covered.
 
 ## Features
 
@@ -19,7 +19,7 @@
 
 ### 📱 Seamless Communication
 
-- **_SoloSales_** makes it easy to connect with your clients:
+- **_ConnectEase_** makes it easy to connect with your clients:
   - Click on a client's WhatsApp number to initiate a chat without saving their contact.
   - Tap the call number to start a call directly from the app.
   - Open web links to view client websites or access their social media profiles.
@@ -29,7 +29,7 @@
 
 - Add, edit, or delete client data with ease, allowing you to keep your records up to date.
 - Customize your client list to suit your needs and preferences.
-- **_SoloSales_** adapts to your workflow, making it a perfect fit for professionals in various industries.
+- **_ConnectEase_** adapts to your workflow, making it a perfect fit for professionals in various industries.
 
 ## Download and Install
 
@@ -53,7 +53,7 @@ Before running SoloSales, ensure you have the following:
 
 ## Contributing
 
-We welcome contributions from the community! If you'd like to enhance SoloSales or fix issues, please check out our [Contribution Guidelines](CONTRIBUTING.md) for more information.
+We welcome contributions from the community! If you'd like to enhance ConnectEase or fix issues, please check out our [Contribution Guidelines](CONTRIBUTING.md) for more information.
 
 ## License
 
